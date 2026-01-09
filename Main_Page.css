@@ -1,0 +1,51 @@
+body {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: aqua;
+    font-size: xx-large;
+
+    /* Flexbox centering */
+    display: flex;
+    flex-direction: column;   /* stack items vertically */
+    justify-content: center;  /* vertical center */
+    align-items: center;      /* horizontal center */
+    min-height: 100vh;        /* full screen height */
+    margin: 0;
+    text-align: center;
+}
+
+h1, h2, h3 {
+    margin: 10px 0;
+}
+
+/* Logo styling - decreased size */
+#logo-button {
+    cursor: pointer;
+    max-width: 120px;   /* reduced from 200px */
+    height: auto;
+    border: none;
+    display: block;
+    margin: 20px auto;
+}
+
+/* Button styling - increased size */
+.button-container button {
+    font-size: 1.5rem;       /* bigger text */
+    padding: 15px 40px;      /* larger button area */
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    background-color: #0077cc; /* nice blue */
+    color: white;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.button-container button:hover {
+    background-color: #005fa3; /* darker blue on hover */
+}
+
+/* Smaller font size for the last heading */
+.head4 {
+    font-size: medium;
+    margin-top: 15px;
+}

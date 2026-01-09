@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Preview Details</title>
+  <link rel="stylesheet" href="Update_Details.css">
+  <style>
+    .status {
+      text-align: center;
+      margin-top: 50px;
+    }
+    .status-message {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+    .status img {
+      width: 200px;
+      height: auto;
+    }
+    .success-message { color: green; }
+  </style>
+</head>
+<body>
+  <div class="container" id="mainContainer">
+    <h1>Preview Your Details</h1>
+    <div id="preview"></div>
+    <button onclick="editDetails()">Edit</button>
+    <button onclick="submitDetails()">Submit</button>
+  </div>
+
+  <script>
+    const details = JSON.parse(localStorage.getItem("details"));
+
+    if (details) {
+      let studiesJobInfo = "";
+      if (details.studiesJobType === "Studies") {
+        studiesJobInfo = `Studying: ${details.studiesDetail}`;
+      } else if (details.studiesJobType === "Job") {
+        studiesJobInfo = `Working at: ${details.jobDetail}`;
+      }
+
+      document.getElementById("preview").innerHTML = `
+        <p><strong>Name:</strong> ${details.title} ${details.name}</p>
+        <p><strong>Phone:</strong> ${details.phone}</p>
+        <p><strong>Location:</strong> ${details.location}</p>
+        <p><strong>${details.studiesJobType}:</strong> ${studiesJobInfo}</p>
+        <p><strong>Praise/Prayer Points:</strong> ${details.points}</p>
+      `;
+    } else {
+      document.getElementById("preview").innerHTML = `
+        <p>No details found. Please go back and fill the form.</p>
+      `;
+    }
+
+    function editDetails() {
+      sessionStorage.setItem("fromPreview", "true");
+      window.location.href = "Update_Details.html";
+    }
+
+    async function submitDetails() {
+      if (!details) {
+        alert("⚠️ No details to submit.");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3000/saveDetails", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(details)
+        });
+
+        if (response.ok) {
+          localStorage.removeItem("details");
+          showSuccess("✅ Details submitted successfully!",
+                      "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif");
+        } else {
+          alert("❌ Error submitting details!");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("⚠️ Failed to connect to backend!");
+      }
+    }
+
+    function showSuccess(message, gifUrl) {
+      document.body.innerHTML = `
+        <div class="status">
+          <div class="status-message success-message">${message}</div>
+          <img src="${gifUrl}" alt="Success GIF">
+        </div>
+      `;
+    }
+  </script>
+</body>
+</html>
