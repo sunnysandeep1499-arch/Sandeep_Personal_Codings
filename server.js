@@ -1,15 +1,17 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const { addDetailsToExcel } = require("./Creating_Files");
 
 const app = express();
 app.use(bodyParser.json());
+app.use(cors());
 
-app.post("/saveDetails", (req, res) => {
+app.post("/saveDetails", async (req, res) => {
   try {
     const details = req.body;
-    addDetailsToExcel(details);
-    res.status(200).send({ message: "Details saved to Excel" });
+    const fileLink = await addDetailsToExcel(details);
+    res.status(200).send({ message: "Details saved to Google Drive", link: fileLink });
   } catch (err) {
     console.error(err);
     res.status(500).send({ error: "Failed to save details" });
