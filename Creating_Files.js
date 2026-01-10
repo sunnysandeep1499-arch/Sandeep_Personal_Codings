@@ -1,9 +1,7 @@
 // Creating_Files.js
-const fs = require("fs");
 const XLSX = require("xlsx");
 const { google } = require("googleapis");
 
-// Authenticate with service account
 const auth = new google.auth.GoogleAuth({
   keyFile: "youth-meating-8404c7028934.json", // path to your JSON key file
   scopes: ["https://www.googleapis.com/auth/drive.file"],
@@ -12,8 +10,11 @@ const auth = new google.auth.GoogleAuth({
 async function addDetailsToExcel(details) {
   const fileName = `youth_details_${new Date().toISOString().split("T")[0]}.xlsx`;
 
+  // Add timestamp
+  const submittedAt = new Date().toLocaleString();
+
   // Create workbook
-  let workbook = XLSX.utils.book_new();
+  const workbook = XLSX.utils.book_new();
   const sheet = XLSX.utils.json_to_sheet([
     {
       Title: details.title,
@@ -25,9 +26,9 @@ async function addDetailsToExcel(details) {
           ? `Studying: ${details.studiesDetail}`
           : `Working at: ${details.jobDetail}`,
       Points: details.points,
+      SubmittedAt: submittedAt, // new column
     },
   ]);
-
   XLSX.utils.book_append_sheet(workbook, sheet, "Sheet1");
 
   // Write to buffer
