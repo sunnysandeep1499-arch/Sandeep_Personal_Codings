@@ -22,17 +22,14 @@
       width: 200px;
       height: 200px;
     }
-    .overlay-text {
+    .overlay-logo {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-weight: bold;
-      font-size: 20px;
-      color: red; /* choose your color */
-      background: white; /* optional: add background for contrast */
-      padding: 2px 6px;
-      border-radius: 4px;
+      width: 50px;   /* adjust size of logo */
+      height: 50px;
+      border-radius: 8px; /* optional: rounded corners */
     }
   </style>
 </head>
@@ -41,11 +38,12 @@
   <h2>Scan for Updating Prayer Points</h2>
   <div class="qr-wrapper">
     <div id="qrcode"></div>
-    <div class="overlay-text">STWH YM</div>
+    <!-- Overlay logo image -->
+    <img src="twh weba logo.jpg" alt="Logo" class="overlay-logo">
   </div>
 
   <script>
-    // Replace with your GitHub Pages URL (better than raw GitHub file link)
+    // Replace with your GitHub Pages URL
     var githubURL = "https://sunnysandeep1499-arch.github.io/Sandeep_Personal_Codings/Main_Page.html";
     
     // Generate QR code inside the div
