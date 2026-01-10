@@ -64,7 +64,7 @@
       }
 
       try {
-        const response = await fetch("http://localhost:3000/saveDetails", {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxDCa_OWYCg6ghHiZK0qwqIRBQbGBxEspk-_8GHnPJNa6Bx0onyqZ4EPkQFJfcWk7A1/exec", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(details)
@@ -73,9 +73,8 @@
         if (response.ok) {
           const result = await response.json();
           localStorage.removeItem("details");
-          showSuccess(`✅ Details submitted successfully! 
-                        <br><a href="${result.link}" target="_blank">View File</a>`,
-                        "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif");;
+          showSuccess("✅ Details submitted successfully!",
+                  "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif");;
         } else {
           alert("❌ Error submitting details!");
         }
@@ -97,4 +96,5 @@
 </body>
 
 </html>
+
 
