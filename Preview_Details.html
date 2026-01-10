@@ -71,6 +71,7 @@
         });
 
         if (response.ok) {
+          const result = await response.json();
           localStorage.removeItem("details");
           showSuccess("✅ Details submitted successfully!",
                       "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif");
@@ -93,4 +94,5 @@
     }
   </script>
 </body>
+
 </html>
