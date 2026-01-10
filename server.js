@@ -19,3 +19,8 @@ app.post("/saveDetails", async (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server running on http://localhost:3000"));
+const response = await fetch("https://my-youth-backend.onrender.com/saveDetails", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(details)
+});
