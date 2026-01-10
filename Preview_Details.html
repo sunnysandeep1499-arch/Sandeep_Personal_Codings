@@ -70,16 +70,18 @@
           body: JSON.stringify(details)
         });
 
-        if (response.ok) {
-          const result = await response.json();
+        const result = await response.json();
+        console.log("Backend response:", result);
+
+        if (result.status === "success") {
           localStorage.removeItem("details");
           showSuccess("✅ Details submitted successfully!",
-                  "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif");;
+                      "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif");
         } else {
-          alert("❌ Error submitting details!");
+          alert("❌ Error: " + result.message);
         }
       } catch (err) {
-        console.error(err);
+        console.error("Fetch error:", err);
         alert("⚠️ Failed to connect to backend!");
       }
     }
@@ -94,8 +96,4 @@
     }
   </script>
 </body>
-
 </html>
-
-
-
