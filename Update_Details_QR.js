@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GitHub QR Code</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+</head>
+<body>
+  <h2>Scan to view my GitHub Repo</h2>
+  <div id="qrcode"></div>
+
+  <script>
+    // Replace with your GitHub repo URL
+    var githubURL = "https://github.com/sunnysandeep1499-arch/Sandeep_Personal_Codings/blob/c31b87aebc41400c78a8e554758b58aaf068d313/Main_Page.html";
+    
+    // Generate QR code inside the div
+    new QRCode(document.getElementById("qrcode"), {
+      text: githubURL,
+      width: 200,
+      height: 200
+    });
+  </script>
+</body>
+</html>
