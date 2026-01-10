@@ -3,14 +3,49 @@
 <head>
   <title>Scan for Updating Prayer Points</title>
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;   /* center horizontally */
+      justify-content: center; /* center vertically */
+      height: 100vh;         /* full screen height */
+      margin: 0;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .qr-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    #qrcode {
+      width: 200px;
+      height: 200px;
+    }
+    .overlay-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: bold;
+      font-size: 20px;
+      color: red; /* choose your color */
+      background: white; /* optional: add background for contrast */
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
-  <h2>Scan to view my GitHub Repo</h2>
-  <div id="qrcode"></div>
+  <h2>Scan for Updating Prayer Points</h2>
+  <div class="qr-wrapper">
+    <div id="qrcode"></div>
+    <div class="overlay-text">STWH YM</div>
+  </div>
 
   <script>
-    // Replace with your GitHub repo URL
-    var githubURL = "https://github.com/sunnysandeep1499-arch/Sandeep_Personal_Codings/blob/c31b87aebc41400c78a8e554758b58aaf068d313/Main_Page.html";
+    // Replace with your GitHub Pages URL (better than raw GitHub file link)
+    var githubURL = "https://sunnysandeep1499-arch.github.io/Sandeep_Personal_Codings/Main_Page.html";
     
     // Generate QR code inside the div
     new QRCode(document.getElementById("qrcode"), {
