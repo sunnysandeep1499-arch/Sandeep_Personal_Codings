@@ -64,7 +64,8 @@
       }
 
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxDTAAimk03SliVfLjwCrwEoh8L0LOj69xh0C6yR8bIrACG8DDzLJdpQejl3zgAugVW/exec", {
+        // ✅ Call your local backend instead of Google Apps Script
+        const response = await fetch("http://localhost:3000/saveDetails", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(details)
@@ -75,7 +76,7 @@
 
         if (result.status === "success") {
           localStorage.removeItem("details");
-          showSuccess("✅ Details submitted successfully!",
+          showSuccess("✅ Details submitted successfully! File saved to Google Drive",
                       "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif");
         } else {
           alert("❌ Error: " + result.message);
