@@ -1,22 +1,26 @@
 // Creating_Files.js
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
 const XLSX = require("xlsx");
 const { google } = require("googleapis");
 const fs = require("fs");
 
-// Authenticate with Google Drive
+const app = express();
+app.use(bodyParser.json());
+app.use(cors());
+
+// Google Drive Auth
 const auth = new google.auth.GoogleAuth({
   keyFile: "youth-meating-8404c7028934.json", // path to your JSON key file
   scopes: ["https://www.googleapis.com/auth/drive.file"],
 });
 
 async function addDetailsToExcel(details) {
-  // File name with date
   const fileName = `youth_details_${new Date().toISOString().split("T")[0]}.xlsx`;
-
-  // Add timestamp
   const submittedAt = new Date().toLocaleString();
 
-  // Create workbook and sheet
+  // Create workbook
   const workbook = XLSX.utils.book_new();
   const sheet = XLSX.utils.json_to_sheet([
     {
@@ -61,4 +65,16 @@ async function addDetailsToExcel(details) {
   return response.data.webViewLink;
 }
 
-module.exports = { addDetailsToExcel };
+// API endpoint
+app.post("/saveDetails", async (req, res) => {
+  try {
+    const details = req.body;
+    const fileLink = await addDetailsToExcel(details);
+    res.status(200).send({ status: "success", link: fileLink });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send({ status: "error", message: "Failed to save details" });
+  }
+});
+
+app.listen(3000, () => console.log("🚀 Server running on http://localhost:3000"));
