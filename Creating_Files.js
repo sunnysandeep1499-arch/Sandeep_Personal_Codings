@@ -1,19 +1,22 @@
 // Creating_Files.js
 const XLSX = require("xlsx");
 const { google } = require("googleapis");
+const fs = require("fs");
 
+// Authenticate with Google Drive
 const auth = new google.auth.GoogleAuth({
   keyFile: "youth-meating-8404c7028934.json", // path to your JSON key file
   scopes: ["https://www.googleapis.com/auth/drive.file"],
 });
 
 async function addDetailsToExcel(details) {
+  // File name with date
   const fileName = `youth_details_${new Date().toISOString().split("T")[0]}.xlsx`;
 
   // Add timestamp
   const submittedAt = new Date().toLocaleString();
 
-  // Create workbook
+  // Create workbook and sheet
   const workbook = XLSX.utils.book_new();
   const sheet = XLSX.utils.json_to_sheet([
     {
@@ -26,25 +29,26 @@ async function addDetailsToExcel(details) {
           ? `Studying: ${details.studiesDetail}`
           : `Working at: ${details.jobDetail}`,
       Points: details.points,
-      SubmittedAt: submittedAt, // new column
+      SubmittedAt: submittedAt,
     },
   ]);
   XLSX.utils.book_append_sheet(workbook, sheet, "Sheet1");
 
-  // Write to buffer
+  // Write to buffer and save locally
   const buffer = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+  fs.writeFileSync(fileName, buffer);
 
   // Upload to Google Drive
   const drive = google.drive({ version: "v3", auth: await auth.getClient() });
 
   const fileMetadata = {
     name: fileName,
-    parents: ["1lUXTt7uZfF2H9qJcJaM3Xt193KBUnIu-"], // folder ID
+    parents: ["1lUXTt7uZfF2H9qJcJaM3Xt193KBUnIu-"], // ✅ Your folder ID
   };
 
   const media = {
     mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    body: Buffer.from(buffer),
+    body: fs.createReadStream(fileName),
   };
 
   const response = await drive.files.create({
