@@ -7,35 +7,39 @@
     <link rel="stylesheet" href="Main_Page.css">
     <title>STWH Youth Details</title>
 </head>
+
 <body>
-    <ul id="my-list"></ul>
-    <script src="Main_Page.js"></script>
-
     <h1 class="head1">Shalem Telugu Worship Home</h1>
-    <h1 class="head2">Youth Meeting</h1>
-    <h1 class="head3">Date: <span id="currentDate"></span></h1>
-
-    <script>
-        // Get today's date
-        const today = new Date();
-        // Format it (DD/MM/YYYY)
-        const formattedDate = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
-        // Insert into the span
-        document.getElementById("currentDate").textContent = formattedDate;
-    </script>
+    <h2 class="head2">Youth Meeting</h2>
+    <h3 class="head3">Date: <span id="currentDate"></span></h3>
 
     <div class="content">
-        <!-- Keep logo only -->
-        <img src="stwh_weba_logo.jpg">
+        <!-- Logo -->
+        <img
+            src="stwh_weba_logo.jpg"
+            alt="STWH Logo"
+            id="logo-button"
+        >
 
-        <!-- New buttons -->
+        <!-- Buttons -->
         <div class="button-container">
-            <button onclick="window.location.href='View_Details.html'">View Details</button>
-            <button onclick="window.location.href='Update_Details.html'">Update Details</button>
+            <button onclick="window.location.href='View_Details.html'">
+                View Details
+            </button>
+            <button onclick="window.location.href='Update_Details.html'">
+                Update Details
+            </button>
         </div>
     </div>
+
+    <script>
+        const today = new Date();
+        const formattedDate =
+            today.getDate() + "/" +
+            (today.getMonth() + 1) + "/" +
+            today.getFullYear();
+
+        document.getElementById("currentDate").textContent = formattedDate;
+    </script>
 </body>
-
 </html>
-
-
