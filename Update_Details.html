@@ -19,11 +19,12 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <h1>Update Your Details</h1>
 
-    <label for="name" class="required">Name:</label>
+    <label class="required">Name:</label>
     <div class="name-field">
       <select id="title">
         <option value="">-Select-</option>
@@ -33,13 +34,21 @@
       <input type="text" id="name" placeholder="Enter Name">
     </div>
 
-    <label for="phone" class="required">Phone:</label>
+    <label class="required">Phone:</label>
     <input type="tel" id="phone">
 
-    <label for="location" class="required">Location:</label>
+    <label class="required">Location:</label>
     <input type="text" id="location">
 
-    <label for="studiesJobType" class="required">Studies/Job:</label>
+    <!-- ✅ NEW FIELD -->
+    <label class="required">Attended From:</label>
+    <select id="attendedFrom">
+      <option value="">-Select-</option>
+      <option value="STWH">STWH</option>
+      <option value="WEBA">WEBA</option>
+    </select>
+
+    <label class="required">Studies / Job:</label>
     <select id="studiesJobType" onchange="toggleStudiesJobInput()">
       <option value="">-Select-</option>
       <option value="Studies">Studies</option>
@@ -47,22 +56,21 @@
     </select>
 
     <div id="studiesInput" class="hidden">
-      <input type="text" id="studiesDetail" placeholder="Enter what you are studying">
+      <input type="text" id="studiesDetail" placeholder="What are you studying?">
     </div>
 
     <div id="jobInput" class="hidden">
-      <input type="text" id="jobDetail" placeholder="Enter where you are working">
+      <input type="text" id="jobDetail" placeholder="Where are you working?">
     </div>
 
-    <label for="points" class="required">Praise/Prayer Points:</label>
+    <label class="required">Praise / Prayer Points:</label>
     <textarea id="points"></textarea>
-    <div class="note">Note: if nothing is there to share, please mark "No Points".</div>
+    <div class="note">If nothing to share, type <b>No Points</b>.</div>
 
     <button onclick="goToPreview()">Preview</button>
   </div>
 
   <script>
-    // Toggle input fields based on dropdown
     function toggleStudiesJobInput() {
       const type = document.getElementById("studiesJobType").value;
       document.getElementById("studiesInput").classList.add("hidden");
@@ -70,63 +78,60 @@
 
       if (type === "Studies") {
         document.getElementById("studiesInput").classList.remove("hidden");
-      } else if (type === "Job") {
+      }
+      if (type === "Job") {
         document.getElementById("jobInput").classList.remove("hidden");
       }
     }
 
-    // Prefill only if coming from Preview (Edit button)
-    window.onload = function () {
+    window.onload = () => {
       const saved = JSON.parse(localStorage.getItem("details"));
-      if (saved && sessionStorage.getItem("fromPreview") === "true") {
+      if (saved) {
         document.getElementById("title").value = saved.title || "";
         document.getElementById("name").value = saved.name || "";
         document.getElementById("phone").value = saved.phone || "";
         document.getElementById("location").value = saved.location || "";
+        document.getElementById("attendedFrom").value = saved.attendedFrom || "";
         document.getElementById("studiesJobType").value = saved.studiesJobType || "";
         toggleStudiesJobInput();
         document.getElementById("studiesDetail").value = saved.studiesDetail || "";
         document.getElementById("jobDetail").value = saved.jobDetail || "";
         document.getElementById("points").value = saved.points || "";
-      } else {
-        document.getElementById("title").value = "";
-        document.getElementById("name").value = "";
-        document.getElementById("phone").value = "";
-        document.getElementById("location").value = "";
-        document.getElementById("studiesJobType").value = "";
-        document.getElementById("studiesDetail").value = "";
-        document.getElementById("jobDetail").value = "";
-        document.getElementById("points").value = "";
-        localStorage.removeItem("details");
       }
-      sessionStorage.removeItem("fromPreview"); // reset flag
     };
 
     function goToPreview() {
-      const title = document.getElementById("title").value;
-      const name = document.getElementById("name").value;
-      const phone = document.getElementById("phone").value;
-      const location = document.getElementById("location").value;
-      const studiesJobType = document.getElementById("studiesJobType").value;
-      const studiesDetail = document.getElementById("studiesDetail").value;
-      const jobDetail = document.getElementById("jobDetail").value;
-      const points = document.getElementById("points").value;
+      const details = {
+        title: title.value,
+        name: name.value,
+        phone: phone.value,
+        location: location.value,
+        attendedFrom: attendedFrom.value,
+        studiesJobType: studiesJobType.value,
+        studiesDetail: studiesDetail.value,
+        jobDetail: jobDetail.value,
+        points: points.value
+      };
 
-      // Validation
-      if (!title || !name || !phone || !location || !studiesJobType || !points) {
-        alert("⚠️ Please fill in all mandatory fields!");
-        return;
-      }
-      if (studiesJobType === "Studies" && !studiesDetail) {
-        alert("⚠️ Please enter your studies detail!");
-        return;
-      }
-      if (studiesJobType === "Job" && !jobDetail) {
-        alert("⚠️ Please enter your job detail!");
+      if (
+        !details.title || !details.name || !details.phone ||
+        !details.location || !details.attendedFrom ||
+        !details.studiesJobType || !details.points
+      ) {
+        alert("⚠️ Please fill all required fields");
         return;
       }
 
-      const details = { title, name, phone, location, studiesJobType, studiesDetail, jobDetail, points };
+      if (details.studiesJobType === "Studies" && !details.studiesDetail) {
+        alert("⚠️ Enter studies details");
+        return;
+      }
+
+      if (details.studiesJobType === "Job" && !details.jobDetail) {
+        alert("⚠️ Enter job details");
+        return;
+      }
+
       localStorage.setItem("details", JSON.stringify(details));
       window.location.href = "Preview_Details.html";
     }
