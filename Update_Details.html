@@ -53,7 +53,7 @@
     <label class="required">Praise / Prayer Points:</label>
     <textarea id="points"></textarea>
 
-    <!-- Attended From (MOVED TO END) -->
+    <!-- ✅ Attended From (NOW AT THE END) -->
     <label class="required">Attended From:</label>
     <select id="attendedFrom">
       <option value="">-Select-</option>
@@ -61,6 +61,7 @@
       <option value="WEBA">WEBA</option>
     </select>
 
+    <!-- Preview Button -->
     <button onclick="goToPreview()">Preview</button>
   </div>
 
@@ -79,22 +80,21 @@
       if (studiesJobType.value === "Job") jobInput.classList.remove("hidden");
     }
 
-    // Prefill data when coming back from Preview
+    // Prefill when returning from Preview
     window.onload = () => {
       const saved = JSON.parse(localStorage.getItem("details"));
+      if (!saved) return;
 
-      if (saved) {
-        document.getElementById("title").value = saved.title;
-        document.getElementById("name").value = saved.name;
-        document.getElementById("phone").value = saved.phone;
-        document.getElementById("location").value = saved.location;
-        document.getElementById("studiesJobType").value = saved.studiesJobType;
-        toggleStudiesJobInput();
-        document.getElementById("studiesDetail").value = saved.studiesDetail || "";
-        document.getElementById("jobDetail").value = saved.jobDetail || "";
-        document.getElementById("points").value = saved.points;
-        document.getElementById("attendedFrom").value = saved.attendedFrom;
-      }
+      document.getElementById("title").value = saved.title;
+      document.getElementById("name").value = saved.name;
+      document.getElementById("phone").value = saved.phone;
+      document.getElementById("location").value = saved.location;
+      document.getElementById("studiesJobType").value = saved.studiesJobType;
+      toggleStudiesJobInput();
+      document.getElementById("studiesDetail").value = saved.studiesDetail || "";
+      document.getElementById("jobDetail").value = saved.jobDetail || "";
+      document.getElementById("points").value = saved.points;
+      document.getElementById("attendedFrom").value = saved.attendedFrom;
     };
 
     function goToPreview() {
@@ -110,7 +110,6 @@
         attendedFrom: document.getElementById("attendedFrom").value
       };
 
-      // Validation
       if (
         !details.title ||
         !details.name ||
@@ -135,7 +134,7 @@
       }
 
       localStorage.setItem("details", JSON.stringify(details));
-      window.location.href = "Preview_Details.html";
+      window.location.href = "Preview_Details.html"; // ✅ REDIRECTS
     }
   </script>
 </body>
