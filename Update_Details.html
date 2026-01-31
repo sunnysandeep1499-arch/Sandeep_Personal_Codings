@@ -14,7 +14,6 @@
   <div class="container">
     <h1>Update Your Details</h1>
 
-    <!-- Name -->
     <label class="required">Name:</label>
     <div class="name-field">
       <select id="title">
@@ -25,15 +24,12 @@
       <input type="text" id="name">
     </div>
 
-    <!-- Phone -->
     <label class="required">Phone:</label>
     <input type="tel" id="phone">
 
-    <!-- Location -->
     <label class="required">Location:</label>
     <input type="text" id="location">
 
-    <!-- Studies / Job -->
     <label class="required">Studies / Job:</label>
     <select id="studiesJobType">
       <option value="">-Select-</option>
@@ -49,11 +45,10 @@
       <input type="text" id="jobDetail" placeholder="Where are you working?">
     </div>
 
-    <!-- Praise / Prayer -->
     <label class="required">Praise / Prayer Points:</label>
     <textarea id="points"></textarea>
 
-    <!-- ✅ Attended From (NOW AT THE END) -->
+    <!-- Attended From -->
     <label class="required">Attended From:</label>
     <select id="attendedFrom">
       <option value="">-Select-</option>
@@ -61,7 +56,6 @@
       <option value="WEBA">WEBA</option>
     </select>
 
-    <!-- Preview Button -->
     <button onclick="goToPreview()">Preview</button>
   </div>
 
@@ -80,44 +74,40 @@
       if (studiesJobType.value === "Job") jobInput.classList.remove("hidden");
     }
 
-    // Prefill when returning from Preview
+    // Prefill data when coming back from Preview
     window.onload = () => {
       const saved = JSON.parse(localStorage.getItem("details"));
       if (!saved) return;
 
-      document.getElementById("title").value = saved.title;
-      document.getElementById("name").value = saved.name;
-      document.getElementById("phone").value = saved.phone;
-      document.getElementById("location").value = saved.location;
-      document.getElementById("studiesJobType").value = saved.studiesJobType;
+      title.value = saved.title;
+      name.value = saved.name;
+      phone.value = saved.phone;
+      location.value = saved.location;
+      studiesJobType.value = saved.studiesJobType;
       toggleStudiesJobInput();
-      document.getElementById("studiesDetail").value = saved.studiesDetail || "";
-      document.getElementById("jobDetail").value = saved.jobDetail || "";
-      document.getElementById("points").value = saved.points;
-      document.getElementById("attendedFrom").value = saved.attendedFrom;
+      studiesDetail.value = saved.studiesDetail || "";
+      jobDetail.value = saved.jobDetail || "";
+      points.value = saved.points;
+      attendedFrom.value = saved.attendedFrom;
     };
 
     function goToPreview() {
       const details = {
-        title: document.getElementById("title").value.trim(),
-        name: document.getElementById("name").value.trim(),
-        phone: document.getElementById("phone").value.trim(),
-        location: document.getElementById("location").value.trim(),
-        studiesJobType: document.getElementById("studiesJobType").value,
-        studiesDetail: document.getElementById("studiesDetail").value.trim(),
-        jobDetail: document.getElementById("jobDetail").value.trim(),
-        points: document.getElementById("points").value.trim(),
-        attendedFrom: document.getElementById("attendedFrom").value
+        title: title.value.trim(),
+        name: name.value.trim(),
+        phone: phone.value.trim(),
+        location: location.value.trim(),
+        studiesJobType: studiesJobType.value,
+        studiesDetail: studiesDetail.value.trim(),
+        jobDetail: jobDetail.value.trim(),
+        points: points.value.trim(),
+        attendedFrom: attendedFrom.value
       };
 
       if (
-        !details.title ||
-        !details.name ||
-        !details.phone ||
-        !details.location ||
-        !details.studiesJobType ||
-        !details.points ||
-        !details.attendedFrom
+        !details.title || !details.name || !details.phone ||
+        !details.location || !details.studiesJobType ||
+        !details.points || !details.attendedFrom
       ) {
         alert("⚠️ Please fill all mandatory fields");
         return;
@@ -134,7 +124,7 @@
       }
 
       localStorage.setItem("details", JSON.stringify(details));
-      window.location.href = "Preview_Details.html"; // ✅ REDIRECTS
+      window.location.href = "Preview_Details.html";
     }
   </script>
 </body>
