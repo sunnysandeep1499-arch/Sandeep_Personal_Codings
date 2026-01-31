@@ -51,9 +51,9 @@
       <input type="text" id="jobDetail" placeholder="Where are you working?">
     </div>
 
-    <label>Praise / Prayer Points:</label>
-    <textarea id="points"></textarea>
-    <small class="note">Note: If No Praise/Prayer Points type <b>NP</b></small>
+    <label class="required">Praise / Prayer Points:</label>
+    <textarea id="points" placeholder="Enter Praise/Prayer Points"></textarea>
+    <small class="note">Note: Praise/Prayer Points is mandatory</small>
 
     <label class="required">Attended From:</label>
     <select id="attendedFrom">
@@ -102,7 +102,7 @@
       toggleStudiesJobInput();
       studiesDetailEl.value = saved.studiesDetail || "";
       jobDetailEl.value = saved.jobDetail || "";
-      pointsEl.value = saved.points === "NP" ? "" : saved.points;
+      pointsEl.value = saved.points || "";
       attendedFromEl.value = saved.attendedFrom;
     };
 
@@ -116,7 +116,7 @@
         studiesJobType: studiesJobTypeEl.value,
         studiesDetail: studiesDetailEl.value.trim(),
         jobDetail: jobDetailEl.value.trim(),
-        points: pointsEl.value.trim() || "NP",   // Default NP if empty
+        points: pointsEl.value.trim(),   // ✅ Mandatory
         attendedFrom: attendedFromEl.value
       };
 
@@ -127,9 +127,10 @@
         !details.phone ||
         !details.location ||
         !details.studiesJobType ||
+        !details.points ||             // ✅ Mandatory check
         !details.attendedFrom
       ) {
-        alert("⚠️ Please fill all mandatory fields");
+        alert("⚠️ Please fill all mandatory fields including Praise/Prayer Points");
         return;
       }
 
