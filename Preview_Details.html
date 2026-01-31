@@ -1,11 +1,13 @@
 <script>
-  const details = JSON.parse(localStorage.getItem("details"));
-
   async function submitDetails() {
-    if (!details) {
+    const storedDetails = localStorage.getItem("details");
+
+    if (!storedDetails) {
       showError("⚠️ No details found to submit.");
       return;
     }
+
+    const details = JSON.parse(storedDetails);
 
     try {
       const response = await fetch("http://localhost:3000/saveDetails", {
@@ -15,7 +17,6 @@
       });
 
       const result = await response.json();
-      console.log("Backend response:", result);
 
       if (result.status === "success") {
         localStorage.removeItem("details");
@@ -27,7 +28,7 @@
         showError("❌ Submission failed. Please try again.");
       }
     } catch (err) {
-      console.error("Fetch error:", err);
+      console.error(err);
       showError("⚠️ Unable to connect to server.");
     }
   }
