@@ -45,8 +45,8 @@
       <input type="text" id="jobDetail" placeholder="Where are you working?">
     </div>
 
-    <label class="required">Praise / Prayer Points:</label>
-    <textarea id="points"></textarea>
+    <label>Praise / Prayer Points:</label>
+    <textarea id="points" placeholder="Leave empty for NP"></textarea>
 
     <label class="required">Attended From:</label>
     <select id="attendedFrom">
@@ -55,7 +55,7 @@
       <option value="WEBA">WEBA</option>
     </select>
 
-    <button type="button" onclick="goToPreview()">Preview</button>
+    <button id="previewBtn">Preview</button>
   </div>
 
   <script>
@@ -82,7 +82,7 @@
       if (studiesJobTypeEl.value === "Job") jobInput.classList.remove("hidden");
     }
 
-    // Prefill when coming back from Preview
+    // Prefill on edit
     window.onload = () => {
       const saved = JSON.parse(localStorage.getItem("details"));
       if (!saved) return;
@@ -95,11 +95,11 @@
       toggleStudiesJobInput();
       studiesDetailEl.value = saved.studiesDetail || "";
       jobDetailEl.value = saved.jobDetail || "";
-      pointsEl.value = saved.points;
+      pointsEl.value = saved.points === "NP" ? "" : saved.points;
       attendedFromEl.value = saved.attendedFrom;
     };
 
-    function goToPreview() {
+    document.getElementById("previewBtn").addEventListener("click", () => {
       const details = {
         title: titleEl.value.trim(),
         name: nameEl.value.trim(),
@@ -108,7 +108,7 @@
         studiesJobType: studiesJobTypeEl.value,
         studiesDetail: studiesDetailEl.value.trim(),
         jobDetail: jobDetailEl.value.trim(),
-        points: pointsEl.value.trim(),
+        points: pointsEl.value.trim() || "NP",   // ✅ NP DEFAULT
         attendedFrom: attendedFromEl.value
       };
 
@@ -118,7 +118,6 @@
         !details.phone ||
         !details.location ||
         !details.studiesJobType ||
-        !details.points ||
         !details.attendedFrom
       ) {
         alert("⚠️ Please fill all mandatory fields");
@@ -136,8 +135,10 @@
       }
 
       localStorage.setItem("details", JSON.stringify(details));
-      window.location.href = "Preview_Details.html"; // ✅ NOW WORKS
-    }
+
+      // ✅ GUARANTEED REDIRECT
+      window.location.assign("Preview_Details.html");
+    });
   </script>
 </body>
 </html>
