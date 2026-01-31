@@ -17,16 +17,17 @@
 
   <script>
     const details = JSON.parse(localStorage.getItem("details"));
+    const previewDiv = document.getElementById("preview");
 
     if (!details) {
-      document.getElementById("preview").innerHTML = "<p>No data found</p>";
+      previewDiv.innerHTML = "<p>No data found</p>";
     } else {
       const workInfo =
         details.studiesJobType === "Studies"
           ? details.studiesDetail
           : details.jobDetail;
 
-      document.getElementById("preview").innerHTML = `
+      previewDiv.innerHTML = `
         <p><b>Name:</b> ${details.title} ${details.name}</p>
         <p><b>Phone:</b> ${details.phone}</p>
         <p><b>Location:</b> ${details.location}</p>
@@ -37,16 +38,13 @@
     }
 
     function editDetails() {
-      sessionStorage.setItem("fromPreview", "true");
       window.location.href = "Update_Details.html";
     }
 
-    <script>
     function submitDetails() {
-      const details = JSON.parse(localStorage.getItem("details"));
-    
       fetch("YOUR_GOOGLE_SCRIPT_URL", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(details)
       })
       .then(res => res.json())
@@ -62,8 +60,6 @@
         alert("❌ Network error. Data not saved");
       });
     }
-    </script>
-
   </script>
 </body>
 </html>
