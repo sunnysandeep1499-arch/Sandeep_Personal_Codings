@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Preview Details</title>
+  <link rel="stylesheet" href="Update_Details.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Preview Your Details</h1>
+    <div id="preview"></div>
+
+    <button onclick="editDetails()">Edit</button>
+    <button onclick="submitDetails()">Submit</button>
+  </div>
+
+  <script>
+    const details = JSON.parse(localStorage.getItem("details"));
+
+    if (!details) {
+      document.getElementById("preview").innerHTML = "<p>No data found</p>";
+    } else {
+      let workInfo =
+        details.studiesJobType === "Studies"
+          ? details.studiesDetail
+          : details.jobDetail;
+
+      document.getElementById("preview").innerHTML = `
+        <p><b>Name:</b> ${details.title} ${details.name}</p>
+        <p><b>Phone:</b> ${details.phone}</p>
+        <p><b>Location:</b> ${details.location}</p>
+        <p><b>Attended From:</b> ${details.attendedFrom}</p>
+        <p><b>${details.studiesJobType}:</b> ${workInfo}</p>
+        <p><b>Praise / Prayer Points:</b> ${details.points}</p>
+      `;
+    }
+
+    function editDetails() {
+      window.location.href = "Update_Details.html";
+    }
+
+    function submitDetails() {
+      alert("✅ Details submitted successfully!");
+      localStorage.removeItem("details");
+    }
+  </script>
+</body>
+</html>
