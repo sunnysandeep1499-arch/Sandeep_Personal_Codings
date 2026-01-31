@@ -7,10 +7,8 @@
   <style>
     .success-screen {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: #e0f7fa;
       display: flex;
       justify-content: center;
@@ -30,35 +28,15 @@
     #preview p {
       margin: 8px 0;
     }
-    #csvLink {
-      display: inline-block;
-      margin-top: 15px;
-      padding: 10px 15px;
-      background: #00796b;
-      color: #fff;
-      border-radius: 5px;
-      text-decoration: none;
-    }
-    #csvLink:hover {
-      background: #004d40;
-    }
   </style>
 </head>
-
 <body>
   <div class="container">
     <h1>Preview Your Details</h1>
     <div id="preview"></div>
 
     <button onclick="editDetails()">Edit</button>
-    <button onclick="prepareCSV()">Submit</button>
-
-    <!-- Container for CSV preview -->
-    <div id="csvContainer" style="margin-top:20px; display:none;">
-      <h2>Review CSV</h2>
-      <pre id="csvPreview" style="background:#f0f0f0;padding:10px;border-radius:5px;"></pre>
-      <a id="csvLink" href="#" download="">Download CSV</a>
-    </div>
+    <button onclick="submitToGoogleSheet()">Submit</button>
   </div>
 
   <script>
@@ -86,30 +64,32 @@
       window.location.assign("Update_Details.html");
     }
 
-    function prepareCSV() {
+    function submitToGoogleSheet() {
       if (!details) return;
 
-      // Build CSV string
-      const csvHeader = "Title,Name,Phone,Location,Studies/Job,Details,Praise/Prayer,Attended From\n";
-      const workInfo = details.studiesJobType === "Studies" ? details.studiesDetail : details.jobDetail;
-      const csvRow = `"${details.title}","${details.name}","${details.phone}","${details.location}","${details.studiesJobType}","${workInfo}","${details.points}","${details.attendedFrom}"\n`;
-      const csvContent = csvHeader + csvRow;
+      fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", { // Replace with your Web App URL
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(details)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.status === "success") {
+          localStorage.removeItem("details");
 
-      // Show CSV in <pre>
-      document.getElementById("csvPreview").textContent = csvContent;
-
-      // Enable CSV download
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const csvLink = document.getElementById("csvLink");
-      csvLink.href = url;
-      csvLink.download = `Submitted_Details_${Date.now()}.csv`;
-
-      // Show the CSV container
-      document.getElementById("csvContainer").style.display = "block";
-
-      // Clear localStorage
-      localStorage.removeItem("details");
+          // Show full-screen success
+          const successDiv = document.createElement("div");
+          successDiv.className = "success-screen";
+          successDiv.innerHTML = `<span>✅</span>Successfully Updated Your Details in Youth_Details!`;
+          document.body.innerHTML = "";
+          document.body.appendChild(successDiv);
+        } else {
+          alert("❌ Error saving data: " + data.message);
+        }
+      })
+      .catch(() => {
+        alert("❌ Network error. Data not saved");
+      });
     }
   </script>
 </body>
