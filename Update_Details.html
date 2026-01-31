@@ -7,6 +7,12 @@
   <style>
     .required::after { content: " *"; color: red; }
     .hidden { display: none; }
+    .note {
+      display: block;
+      margin-top: 5px;
+      font-size: 12px;
+      color: #555;
+    }
   </style>
 </head>
 
@@ -46,7 +52,8 @@
     </div>
 
     <label>Praise / Prayer Points:</label>
-    <textarea id="points" placeholder="Leave empty for NP"></textarea>
+    <textarea id="points"></textarea>
+    <small class="note">Note: If No Praise/Prayer Points type <b>NP</b></small>
 
     <label class="required">Attended From:</label>
     <select id="attendedFrom">
@@ -82,7 +89,7 @@
       if (studiesJobTypeEl.value === "Job") jobInput.classList.remove("hidden");
     }
 
-    // Prefill on edit
+    // Prefill data on edit
     window.onload = () => {
       const saved = JSON.parse(localStorage.getItem("details"));
       if (!saved) return;
@@ -99,6 +106,7 @@
       attendedFromEl.value = saved.attendedFrom;
     };
 
+    // Preview button click
     document.getElementById("previewBtn").addEventListener("click", () => {
       const details = {
         title: titleEl.value.trim(),
@@ -108,10 +116,11 @@
         studiesJobType: studiesJobTypeEl.value,
         studiesDetail: studiesDetailEl.value.trim(),
         jobDetail: jobDetailEl.value.trim(),
-        points: pointsEl.value.trim() || "NP",   // ✅ NP DEFAULT
+        points: pointsEl.value.trim() || "NP",   // Default NP if empty
         attendedFrom: attendedFromEl.value
       };
 
+      // Mandatory validation
       if (
         !details.title ||
         !details.name ||
@@ -136,7 +145,7 @@
 
       localStorage.setItem("details", JSON.stringify(details));
 
-      // ✅ GUARANTEED REDIRECT
+      // Redirect to Preview
       window.location.assign("Preview_Details.html");
     });
   </script>
