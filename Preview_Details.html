@@ -28,6 +28,20 @@
     #preview p {
       margin: 8px 0;
     }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+    }
+    button {
+      margin: 10px 5px;
+      padding: 8px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
@@ -40,9 +54,12 @@
   </div>
 
   <script>
+    // Get the preview div and fetch details from localStorage
     const previewDiv = document.getElementById("preview");
-    const details = JSON.parse(localStorage.getItem("details"));
+    const detailsJSON = localStorage.getItem("details");
+    const details = detailsJSON ? JSON.parse(detailsJSON) : null;
 
+    // Show details if available
     if (!details) {
       previewDiv.innerHTML = "<p>No data found</p>";
     } else {
@@ -51,24 +68,25 @@
         : details.jobDetail;
 
       previewDiv.innerHTML = `
-        <p><b>Name:</b> ${details.title} ${details.name}</p>
-        <p><b>Phone:</b> ${details.phone}</p>
-        <p><b>Location:</b> ${details.location}</p>
-        <p><b>Attended From:</b> ${details.attendedFrom}</p>
-        <p><b>${details.studiesJobType}:</b> ${workInfo}</p>
-        <p><b>Praise / Prayer Points:</b> ${details.points}</p>
+        <p><b>Name:</b> ${details.title || ""} ${details.name || ""}</p>
+        <p><b>Phone:</b> ${details.phone || ""}</p>
+        <p><b>Location:</b> ${details.location || ""}</p>
+        <p><b>Attended From:</b> ${details.attendedFrom || ""}</p>
+        <p><b>${details.studiesJobType || ""}:</b> ${workInfo || ""}</p>
+        <p><b>Praise / Prayer Points:</b> ${details.points || ""}</p>
       `;
     }
 
+    // Edit button function
     function editDetails() {
       window.location.assign("Update_Details.html");
     }
-    
-    <script>
+
+    // Submit button function
     function submitToGoogleSheet() {
       if (!details) return;
 
-      fetch("https://script.google.com/macros/s/AKfycbzSyTfObqec0eHPbK3zItefpsrqGDAX-XdG6BueRV58cGJf27R1EsOmkEtFL4Spn-mp4Q/exec", { // Replace with your Web App URL
+      fetch("https://script.google.com/macros/s/AKfycbzSyTfObqec0eHPbK3zItefpsrqGDAX-XdG6BueRV58cGJf27R1EsOmkEtFL4Spn-mp4Q/exec", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(details)
