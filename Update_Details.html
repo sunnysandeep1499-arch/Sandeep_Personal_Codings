@@ -14,6 +14,7 @@
   <div class="container">
     <h1>Update Your Details</h1>
 
+    <!-- Name -->
     <label class="required">Name:</label>
     <div class="name-field">
       <select id="title">
@@ -24,12 +25,35 @@
       <input type="text" id="name">
     </div>
 
+    <!-- Phone -->
     <label class="required">Phone:</label>
     <input type="tel" id="phone">
 
+    <!-- Location -->
     <label class="required">Location:</label>
     <input type="text" id="location">
 
+    <!-- Studies / Job -->
+    <label class="required">Studies / Job:</label>
+    <select id="studiesJobType">
+      <option value="">-Select-</option>
+      <option value="Studies">Studies</option>
+      <option value="Job">Job</option>
+    </select>
+
+    <div id="studiesInput" class="hidden">
+      <input type="text" id="studiesDetail" placeholder="What are you studying?">
+    </div>
+
+    <div id="jobInput" class="hidden">
+      <input type="text" id="jobDetail" placeholder="Where are you working?">
+    </div>
+
+    <!-- Praise / Prayer -->
+    <label class="required">Praise / Prayer Points:</label>
+    <textarea id="points"></textarea>
+
+    <!-- Attended From (MOVED TO END) -->
     <label class="required">Attended From:</label>
     <select id="attendedFrom">
       <option value="">-Select-</option>
@@ -37,28 +61,16 @@
       <option value="WEBA">WEBA</option>
     </select>
 
-    <label class="required">Studies / Job:</label>
-    <select id="studiesJobType" onchange="toggleStudiesJobInput()">
-      <option value="">-Select-</option>
-      <option value="Studies">Studies</option>
-      <option value="Job">Job</option>
-    </select>
-
-    <div id="studiesInput" class="hidden">
-      <input type="text" id="studiesDetail">
-    </div>
-
-    <div id="jobInput" class="hidden">
-      <input type="text" id="jobDetail">
-    </div>
-
-    <label class="required">Praise / Prayer Points:</label>
-    <textarea id="points"></textarea>
-
     <button onclick="goToPreview()">Preview</button>
   </div>
 
   <script>
+    const studiesJobType = document.getElementById("studiesJobType");
+    const studiesInput = document.getElementById("studiesInput");
+    const jobInput = document.getElementById("jobInput");
+
+    studiesJobType.addEventListener("change", toggleStudiesJobInput);
+
     function toggleStudiesJobInput() {
       studiesInput.classList.add("hidden");
       jobInput.classList.add("hidden");
@@ -67,42 +79,58 @@
       if (studiesJobType.value === "Job") jobInput.classList.remove("hidden");
     }
 
+    // Prefill data when coming back from Preview
     window.onload = () => {
       const saved = JSON.parse(localStorage.getItem("details"));
 
       if (saved) {
-        title.value = saved.title;
-        name.value = saved.name;
-        phone.value = saved.phone;
-        location.value = saved.location;
-        attendedFrom.value = saved.attendedFrom;
-        studiesJobType.value = saved.studiesJobType;
+        document.getElementById("title").value = saved.title;
+        document.getElementById("name").value = saved.name;
+        document.getElementById("phone").value = saved.phone;
+        document.getElementById("location").value = saved.location;
+        document.getElementById("studiesJobType").value = saved.studiesJobType;
         toggleStudiesJobInput();
-        studiesDetail.value = saved.studiesDetail || "";
-        jobDetail.value = saved.jobDetail || "";
-        points.value = saved.points;
+        document.getElementById("studiesDetail").value = saved.studiesDetail || "";
+        document.getElementById("jobDetail").value = saved.jobDetail || "";
+        document.getElementById("points").value = saved.points;
+        document.getElementById("attendedFrom").value = saved.attendedFrom;
       }
     };
 
     function goToPreview() {
       const details = {
-        title: title.value,
-        name: name.value,
-        phone: phone.value,
-        location: location.value,
-        attendedFrom: attendedFrom.value,
-        studiesJobType: studiesJobType.value,
-        studiesDetail: studiesDetail.value,
-        jobDetail: jobDetail.value,
-        points: points.value
+        title: document.getElementById("title").value.trim(),
+        name: document.getElementById("name").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        location: document.getElementById("location").value.trim(),
+        studiesJobType: document.getElementById("studiesJobType").value,
+        studiesDetail: document.getElementById("studiesDetail").value.trim(),
+        jobDetail: document.getElementById("jobDetail").value.trim(),
+        points: document.getElementById("points").value.trim(),
+        attendedFrom: document.getElementById("attendedFrom").value
       };
 
+      // Validation
       if (
-        !details.title || !details.name || !details.phone ||
-        !details.location || !details.attendedFrom ||
-        !details.studiesJobType || !details.points
+        !details.title ||
+        !details.name ||
+        !details.phone ||
+        !details.location ||
+        !details.studiesJobType ||
+        !details.points ||
+        !details.attendedFrom
       ) {
-        alert("⚠️ Please fill all required fields");
+        alert("⚠️ Please fill all mandatory fields");
+        return;
+      }
+
+      if (details.studiesJobType === "Studies" && !details.studiesDetail) {
+        alert("⚠️ Please enter studies details");
+        return;
+      }
+
+      if (details.studiesJobType === "Job" && !details.jobDetail) {
+        alert("⚠️ Please enter job details");
         return;
       }
 
