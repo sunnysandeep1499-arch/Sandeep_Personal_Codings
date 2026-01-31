@@ -21,7 +21,7 @@
     if (!details) {
       document.getElementById("preview").innerHTML = "<p>No data found</p>";
     } else {
-      let workInfo =
+      const workInfo =
         details.studiesJobType === "Studies"
           ? details.studiesDetail
           : details.jobDetail;
@@ -37,12 +37,14 @@
     }
 
     function editDetails() {
+      sessionStorage.setItem("fromPreview", "true");
       window.location.href = "Update_Details.html";
     }
 
     function submitDetails() {
       alert("✅ Details submitted successfully!");
       localStorage.removeItem("details");
+      sessionStorage.removeItem("fromPreview");
     }
   </script>
 </body>
