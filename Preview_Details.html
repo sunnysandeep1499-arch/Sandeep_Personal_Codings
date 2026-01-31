@@ -1,100 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Preview Details</title>
-  <link rel="stylesheet" href="Update_Details.css">
-  <style>
-    .status {
-      text-align: center;
-      margin-top: 50px;
-    }
-    .status-message {
-      font-size: 24px;
-      margin-bottom: 20px;
-    }
-    .status img {
-      width: 200px;
-      height: auto;
-    }
-    .success-message { color: green; }
-  </style>
-</head>
-<body>
-  <div class="container" id="mainContainer">
-    <h1>Preview Your Details</h1>
-    <div id="preview"></div>
-    <button onclick="editDetails()">Edit</button>
-    <button onclick="submitDetails()">Submit</button>
-  </div>
+<script>
+  const details = JSON.parse(localStorage.getItem("details"));
 
-  <script>
-    const details = JSON.parse(localStorage.getItem("details"));
+  async function submitDetails() {
+    if (!details) {
+      showError("⚠️ No details found to submit.");
+      return;
+    }
 
-    if (details) {
-      let studiesJobInfo = "";
-      if (details.studiesJobType === "Studies") {
-        studiesJobInfo = `Studying: ${details.studiesDetail}`;
-      } else if (details.studiesJobType === "Job") {
-        studiesJobInfo = `Working at: ${details.jobDetail}`;
+    try {
+      const response = await fetch("http://localhost:3000/saveDetails", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(details)
+      });
+
+      const result = await response.json();
+      console.log("Backend response:", result);
+
+      if (result.status === "success") {
+        localStorage.removeItem("details");
+        showSuccess(
+          "✅ Details submitted successfully!",
+          "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif"
+        );
+      } else {
+        showError("❌ Submission failed. Please try again.");
       }
-
-      document.getElementById("preview").innerHTML = `
-        <p><strong>Name:</strong> ${details.title} ${details.name}</p>
-        <p><strong>Phone:</strong> ${details.phone}</p>
-        <p><strong>Location:</strong> ${details.location}</p>
-        <p><strong>${details.studiesJobType}:</strong> ${studiesJobInfo}</p>
-        <p><strong>Praise/Prayer Points:</strong> ${details.points}</p>
-      `;
-    } else {
-      document.getElementById("preview").innerHTML = `
-        <p>No details found. Please go back and fill the form.</p>
-      `;
+    } catch (err) {
+      console.error("Fetch error:", err);
+      showError("⚠️ Unable to connect to server.");
     }
+  }
 
-    function editDetails() {
-      sessionStorage.setItem("fromPreview", "true");
-      window.location.href = "Update_Details.html";
-    }
+  function showSuccess(message, gifUrl) {
+    document.body.innerHTML = `
+      <div class="status">
+        <div class="status-message success-message">${message}</div>
+        <img src="${gifUrl}" alt="Success">
+      </div>
+    `;
+  }
 
-    async function submitDetails() {
-      if (!details) {
-        alert("⚠️ No details to submit.");
-        return;
-      }
-
-      try {
-        // ✅ Call your local backend instead of Google Apps Script
-        const response = await fetch("http://localhost:3000/saveDetails", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(details)
-        });
-
-        const result = await response.json();
-        console.log("Backend response:", result);
-
-        if (result.status === "success") {
-          localStorage.removeItem("details");
-          showSuccess("✅ Details submitted successfully! File saved to Google Drive",
-                      "https://media.giphy.com/media/111ebonMs90YLu/giphy.gif");
-        } else {
-          alert("❌ Error: " + result.message);
-        }
-      } catch (err) {
-        console.error("Fetch error:", err);
-        alert("⚠️ Failed to connect to backend!");
-      }
-    }
-
-    function showSuccess(message, gifUrl) {
-      document.body.innerHTML = `
-        <div class="status">
-          <div class="status-message success-message">${message}</div>
-          <img src="${gifUrl}" alt="Success GIF">
-        </div>
-      `;
-    }
-  </script>
-</body>
-</html>
+  function showError(message) {
+    document.body.innerHTML = `
+      <div class="status">
+        <div class="status-message" style="color:red;">${message}</div>
+      </div>
+    `;
+  }
+</script>
