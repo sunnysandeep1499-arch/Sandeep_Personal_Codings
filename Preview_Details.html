@@ -63,11 +63,12 @@
     function editDetails() {
       window.location.assign("Update_Details.html");
     }
-
+    
+    <script>
     function submitToGoogleSheet() {
       if (!details) return;
 
-      fetch("YOUR_GOOGLE_SCRIPT_WEB_APP_URL", { // Replace with your Web App URL
+      fetch("https://script.google.com/macros/s/AKfycbzSyTfObqec0eHPbK3zItefpsrqGDAX-XdG6BueRV58cGJf27R1EsOmkEtFL4Spn-mp4Q/exec", { // Replace with your Web App URL
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(details)
