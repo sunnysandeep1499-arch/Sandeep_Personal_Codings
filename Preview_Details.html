@@ -30,6 +30,18 @@
     #preview p {
       margin: 8px 0;
     }
+    #csvLink {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 15px;
+      background: #00796b;
+      color: #fff;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    #csvLink:hover {
+      background: #004d40;
+    }
   </style>
 </head>
 
@@ -39,7 +51,14 @@
     <div id="preview"></div>
 
     <button onclick="editDetails()">Edit</button>
-    <button onclick="submitDetails()">Submit</button>
+    <button onclick="prepareCSV()">Submit</button>
+
+    <!-- Container for CSV preview -->
+    <div id="csvContainer" style="margin-top:20px; display:none;">
+      <h2>Review CSV</h2>
+      <pre id="csvPreview" style="background:#f0f0f0;padding:10px;border-radius:5px;"></pre>
+      <a id="csvLink" href="#" download="">Download CSV</a>
+    </div>
   </div>
 
   <script>
@@ -63,40 +82,34 @@
       `;
     }
 
-    // Edit button
     function editDetails() {
       window.location.assign("Update_Details.html");
     }
 
-    // Submit button
-    function submitDetails() {
+    function prepareCSV() {
       if (!details) return;
 
-      // Convert details to CSV
+      // Build CSV string
       const csvHeader = "Title,Name,Phone,Location,Studies/Job,Details,Praise/Prayer,Attended From\n";
       const workInfo = details.studiesJobType === "Studies" ? details.studiesDetail : details.jobDetail;
       const csvRow = `"${details.title}","${details.name}","${details.phone}","${details.location}","${details.studiesJobType}","${workInfo}","${details.points}","${details.attendedFrom}"\n`;
       const csvContent = csvHeader + csvRow;
 
-      // Create Blob and download CSV
+      // Show CSV in <pre>
+      document.getElementById("csvPreview").textContent = csvContent;
+
+      // Enable CSV download
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `Submitted_Details_${Date.now()}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      const csvLink = document.getElementById("csvLink");
+      csvLink.href = url;
+      csvLink.download = `Submitted_Details_${Date.now()}.csv`;
 
-      // Clear local storage
+      // Show the CSV container
+      document.getElementById("csvContainer").style.display = "block";
+
+      // Clear localStorage
       localStorage.removeItem("details");
-
-      // Show full-screen success message
-      const successDiv = document.createElement("div");
-      successDiv.className = "success-screen";
-      successDiv.innerHTML = `<span>✅</span>Successfully Updated Your Details! CSV Downloaded`;
-      document.body.innerHTML = "";
-      document.body.appendChild(successDiv);
     }
   </script>
 </body>
