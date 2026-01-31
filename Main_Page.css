@@ -18,7 +18,7 @@ h1, h2, h3 {
 }
 
 /* Logo styling - decreased size */
-#logo-button {
+logo-button {
     cursor: pointer;
     max-width: 120px;   /* reduced from 200px */
     height: auto;
@@ -48,4 +48,5 @@ h1, h2, h3 {
 .head4 {
     font-size: medium;
     margin-top: 15px;
+
 }
