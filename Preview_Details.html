@@ -16,16 +16,15 @@
   </div>
 
   <script>
-    const details = JSON.parse(localStorage.getItem("details"));
     const previewDiv = document.getElementById("preview");
+    const details = JSON.parse(localStorage.getItem("details"));
 
     if (!details) {
       previewDiv.innerHTML = "<p>No data found</p>";
     } else {
-      const workInfo =
-        details.studiesJobType === "Studies"
-          ? details.studiesDetail
-          : details.jobDetail;
+      const workInfo = details.studiesJobType === "Studies"
+        ? details.studiesDetail
+        : details.jobDetail;
 
       previewDiv.innerHTML = `
         <p><b>Name:</b> ${details.title} ${details.name}</p>
@@ -38,27 +37,12 @@
     }
 
     function editDetails() {
-      window.location.href = "Update_Details.html";
+      window.location.assign("Update_Details.html");
     }
 
     function submitDetails() {
-      fetch("YOUR_GOOGLE_SCRIPT_URL", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(details)
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.status === "success") {
-          alert("✅ Data saved successfully");
-          localStorage.removeItem("details");
-        } else {
-          alert("❌ Error saving data");
-        }
-      })
-      .catch(() => {
-        alert("❌ Network error. Data not saved");
-      });
+      alert("✅ Submitted successfully");
+      localStorage.removeItem("details");
     }
   </script>
 </body>
