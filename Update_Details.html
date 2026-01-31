@@ -84,7 +84,6 @@
     function toggleStudiesJobInput() {
       studiesInput.classList.add("hidden");
       jobInput.classList.add("hidden");
-
       if (studiesJobTypeEl.value === "Studies") studiesInput.classList.remove("hidden");
       if (studiesJobTypeEl.value === "Job") jobInput.classList.remove("hidden");
     }
@@ -106,7 +105,6 @@
       attendedFromEl.value = saved.attendedFrom;
     };
 
-    // Preview button click
     document.getElementById("previewBtn").addEventListener("click", () => {
       const details = {
         title: titleEl.value.trim(),
@@ -116,18 +114,17 @@
         studiesJobType: studiesJobTypeEl.value,
         studiesDetail: studiesDetailEl.value.trim(),
         jobDetail: jobDetailEl.value.trim(),
-        points: pointsEl.value.trim(),   // ✅ Mandatory
+        points: pointsEl.value.trim(),
         attendedFrom: attendedFromEl.value
       };
 
-      // Mandatory validation
       if (
         !details.title ||
         !details.name ||
         !details.phone ||
         !details.location ||
         !details.studiesJobType ||
-        !details.points ||             // ✅ Mandatory check
+        !details.points ||   // Mandatory
         !details.attendedFrom
       ) {
         alert("⚠️ Please fill all mandatory fields including Praise/Prayer Points");
@@ -146,7 +143,6 @@
 
       localStorage.setItem("details", JSON.stringify(details));
 
-      // Redirect to Preview
       window.location.assign("Preview_Details.html");
     });
   </script>
