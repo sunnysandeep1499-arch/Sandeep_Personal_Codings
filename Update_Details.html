@@ -48,7 +48,6 @@
     <label class="required">Praise / Prayer Points:</label>
     <textarea id="points"></textarea>
 
-    <!-- Attended From -->
     <label class="required">Attended From:</label>
     <select id="attendedFrom">
       <option value="">-Select-</option>
@@ -56,58 +55,71 @@
       <option value="WEBA">WEBA</option>
     </select>
 
-    <button onclick="goToPreview()">Preview</button>
+    <button type="button" onclick="goToPreview()">Preview</button>
   </div>
 
   <script>
-    const studiesJobType = document.getElementById("studiesJobType");
+    const titleEl = document.getElementById("title");
+    const nameEl = document.getElementById("name");
+    const phoneEl = document.getElementById("phone");
+    const locationEl = document.getElementById("location");
+    const studiesJobTypeEl = document.getElementById("studiesJobType");
+    const studiesDetailEl = document.getElementById("studiesDetail");
+    const jobDetailEl = document.getElementById("jobDetail");
+    const pointsEl = document.getElementById("points");
+    const attendedFromEl = document.getElementById("attendedFrom");
+
     const studiesInput = document.getElementById("studiesInput");
     const jobInput = document.getElementById("jobInput");
 
-    studiesJobType.addEventListener("change", toggleStudiesJobInput);
+    studiesJobTypeEl.addEventListener("change", toggleStudiesJobInput);
 
     function toggleStudiesJobInput() {
       studiesInput.classList.add("hidden");
       jobInput.classList.add("hidden");
 
-      if (studiesJobType.value === "Studies") studiesInput.classList.remove("hidden");
-      if (studiesJobType.value === "Job") jobInput.classList.remove("hidden");
+      if (studiesJobTypeEl.value === "Studies") studiesInput.classList.remove("hidden");
+      if (studiesJobTypeEl.value === "Job") jobInput.classList.remove("hidden");
     }
 
-    // Prefill data when coming back from Preview
+    // Prefill when coming back from Preview
     window.onload = () => {
       const saved = JSON.parse(localStorage.getItem("details"));
       if (!saved) return;
 
-      title.value = saved.title;
-      name.value = saved.name;
-      phone.value = saved.phone;
-      location.value = saved.location;
-      studiesJobType.value = saved.studiesJobType;
+      titleEl.value = saved.title;
+      nameEl.value = saved.name;
+      phoneEl.value = saved.phone;
+      locationEl.value = saved.location;
+      studiesJobTypeEl.value = saved.studiesJobType;
       toggleStudiesJobInput();
-      studiesDetail.value = saved.studiesDetail || "";
-      jobDetail.value = saved.jobDetail || "";
-      points.value = saved.points;
-      attendedFrom.value = saved.attendedFrom;
+      studiesDetailEl.value = saved.studiesDetail || "";
+      jobDetailEl.value = saved.jobDetail || "";
+      pointsEl.value = saved.points;
+      attendedFromEl.value = saved.attendedFrom;
     };
 
     function goToPreview() {
       const details = {
-        title: title.value.trim(),
-        name: name.value.trim(),
-        phone: phone.value.trim(),
-        location: location.value.trim(),
-        studiesJobType: studiesJobType.value,
-        studiesDetail: studiesDetail.value.trim(),
-        jobDetail: jobDetail.value.trim(),
-        points: points.value.trim(),
-        attendedFrom: attendedFrom.value
+        title: titleEl.value.trim(),
+        name: nameEl.value.trim(),
+        phone: phoneEl.value.trim(),
+        location: locationEl.value.trim(),
+        studiesJobType: studiesJobTypeEl.value,
+        studiesDetail: studiesDetailEl.value.trim(),
+        jobDetail: jobDetailEl.value.trim(),
+        points: pointsEl.value.trim(),
+        attendedFrom: attendedFromEl.value
       };
 
       if (
-        !details.title || !details.name || !details.phone ||
-        !details.location || !details.studiesJobType ||
-        !details.points || !details.attendedFrom
+        !details.title ||
+        !details.name ||
+        !details.phone ||
+        !details.location ||
+        !details.studiesJobType ||
+        !details.points ||
+        !details.attendedFrom
       ) {
         alert("⚠️ Please fill all mandatory fields");
         return;
@@ -124,7 +136,7 @@
       }
 
       localStorage.setItem("details", JSON.stringify(details));
-      window.location.href = "Preview_Details.html";
+      window.location.href = "Preview_Details.html"; // ✅ NOW WORKS
     }
   </script>
 </body>
