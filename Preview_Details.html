@@ -41,11 +41,29 @@
       window.location.href = "Update_Details.html";
     }
 
+    <script>
     function submitDetails() {
-      alert("✅ Details submitted successfully!");
-      localStorage.removeItem("details");
-      sessionStorage.removeItem("fromPreview");
+      const details = JSON.parse(localStorage.getItem("details"));
+    
+      fetch("YOUR_GOOGLE_SCRIPT_URL", {
+        method: "POST",
+        body: JSON.stringify(details)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === "success") {
+          alert("✅ Data saved successfully");
+          localStorage.removeItem("details");
+        } else {
+          alert("❌ Error saving data");
+        }
+      })
+      .catch(() => {
+        alert("❌ Network error. Data not saved");
+      });
     }
+    </script>
+
   </script>
 </body>
 </html>
