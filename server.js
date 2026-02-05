@@ -6,6 +6,7 @@ const fs = require("fs");
 const app = express();
 app.use(bodyParser.json());
 
+// Path to your Excel file
 const filePath = "D:/Youth Meeting Updates/2026/Youth_Details.xlsx";
 
 app.post("/save", (req, res) => {
@@ -24,7 +25,15 @@ app.post("/save", (req, res) => {
 
   // Add header if empty
   if (data.length === 0) {
-    data.push(["Name", "Phone", "Location", "Studies/Job", "Praise/Prayer Points", "Attended From", "Last Updated"]);
+    data.push([
+      "Name",
+      "Phone",
+      "Location",
+      "Studies/Job",
+      "Praise/Prayer Points",
+      "Attended From",
+      "Last Updated"
+    ]);
   }
 
   const workInfo = details.studiesJobType === "Studies" ? details.studiesDetail : details.jobDetail;
@@ -43,7 +52,7 @@ app.post("/save", (req, res) => {
 
   // Write back to sheet
   ws = XLSX.utils.aoa_to_sheet(data);
-  XLSX.utils.book_append_sheet(wb, ws, "Youth_Details");
+  wb.Sheets["Youth_Details"] = ws;
   XLSX.writeFile(wb, filePath);
 
   res.json({ status: "success" });
