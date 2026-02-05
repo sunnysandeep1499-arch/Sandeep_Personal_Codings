@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>View Details</title>
+  <link rel="stylesheet" href="Update_Details.css">
+  <style>
+    .container { max-width: 600px; margin: 50px auto; text-align: center; }
+    #details { margin-top: 20px; text-align: left; }
+    button { margin-top: 20px; padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>View Youth Details</h1>
+    <select id="nameDropdown">
+      <option value="">-- Select Name --</option>
+    </select>
+    <div id="details"></div>
+    <button onclick="closePage()">Close</button>
+  </div>
+
+  <script>
+    const dropdown = document.getElementById("nameDropdown");
+    const detailsDiv = document.getElementById("details");
+
+    // Load names
+    fetch("http://localhost:3000/names")
+      .then(res => res.json())
+      .then(names => {
+        names.forEach(name => {
+          const opt = document.createElement("option");
+          opt.value = name;
+          opt.textContent = name;
+          dropdown.appendChild(opt);
+        });
+      });
+
+    dropdown.addEventListener("change", () => {
+      const name = dropdown.value;
+      if (!name) { detailsDiv.innerHTML = ""; return; }
+      fetch("http://localhost:3000/details/" + encodeURIComponent(name))
+        .then(res => res.json())
+        .then(data => {
+          if (!data.Name) {
+            detailsDiv.innerHTML = "<p>No details found</p>";
+            return;
+          }
+          detailsDiv.innerHTML = `
+            <p><b>Name:</b> ${data.Name}</p>
+            <p><b>Phone:</b> ${data.Phone}</p>
+            <p><b>Location:</b> ${data.Location}</p>
+            <p><b>Studies/Job:</b> ${data["Studies/Job"]}</p>
+            <p><b>Praise/Prayer Points:</b> ${data["Praise/Prayer Points"]}</p>
+            <p><b>Attended From:</b> ${data["Attended From"]}</p>
+            <p><b>Last Updated:</b> ${data["Last Updated"]}</p>
+          `;
+        });
+    });
+
+    function closePage() {
+      window.location.href = "Main_Page.html";
+    }
+  </script>
+</body>
+</html>
