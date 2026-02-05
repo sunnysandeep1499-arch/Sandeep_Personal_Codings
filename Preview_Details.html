@@ -43,6 +43,8 @@
       cursor: pointer;
     }
   </style>
+  <!-- Load SheetJS library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -50,7 +52,7 @@
     <div id="preview"></div>
 
     <button onclick="editDetails()">Edit</button>
-    <button onclick="submitToGoogleSheet()">Submit</button>
+    <button onclick="submitToExcel()">Submit</button>
   </div>
 
   <script>
@@ -82,33 +84,37 @@
       window.location.assign("Update_Details.html");
     }
 
-    // Submit button function
-    function submitToGoogleSheet() {
+    // Submit button function - Save to Excel locally
+    function submitToExcel() {
       if (!details) return;
 
-      fetch("https://script.google.com/macros/s/AKfycbzSyTfObqec0eHPbK3zItefpsrqGDAX-XdG6BueRV58cGJf27R1EsOmkEtFL4Spn-mp4Q/exec", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(details)
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.status === "success") {
-          localStorage.removeItem("details");
+      // Prepare data for Excel
+      const data = [
+        ["Name", (details.title || "") + " " + (details.name || "")],
+        ["Phone", details.phone || ""],
+        ["Location", details.location || ""],
+        ["Attended From", details.attendedFrom || ""],
+        [details.studiesJobType || "", details.studiesJobType === "Studies" ? details.studiesDetail || "" : details.jobDetail || ""],
+        ["Praise / Prayer Points", details.points || ""]
+      ];
 
-          // Show full-screen success
-          const successDiv = document.createElement("div");
-          successDiv.className = "success-screen";
-          successDiv.innerHTML = `<span>✅</span>Successfully Updated Your Details in Youth_Details!`;
-          document.body.innerHTML = "";
-          document.body.appendChild(successDiv);
-        } else {
-          alert("❌ Error saving data: " + data.message);
-        }
-      })
-      .catch(() => {
-        alert("❌ Network error. Data not saved");
-      });
+      // Create worksheet and workbook
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Youth_Details");
+
+      // Trigger download as Excel file
+      XLSX.writeFile(wb, "Youth_Details.xlsx");
+
+      // Clear localStorage
+      localStorage.removeItem("details");
+
+      // Show full-screen success
+      const successDiv = document.createElement("div");
+      successDiv.className = "success-screen";
+      successDiv.innerHTML = `<span>✅</span>Successfully Saved Your Details to Excel!`;
+      document.body.innerHTML = "";
+      document.body.appendChild(successDiv);
     }
   </script>
 </body>
